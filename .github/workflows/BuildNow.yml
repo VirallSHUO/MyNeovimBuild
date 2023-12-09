@@ -32,7 +32,7 @@ jobs:
 
     - name: Install DEB package
       run: |
-        pwd
+        cd build
         sudo dpkg -i nvim-linux64.deb
 
     - name: Upload DEB package
