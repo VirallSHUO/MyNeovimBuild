@@ -1,0 +1,41 @@
+name: Build Neovim
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        repository: 'neovim/neovim'
+        ref: 'master'
+
+    - name: Setup Neovim build environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
+
+    - name: Build Neovim
+      run: |
+        make CMAKE_BUILD_TYPE=Release
+
+    - name: Build DEB package
+      run: |
+        cd build
+        cpack -G DEB
+
+    - name: Install DEB package
+      run: |
+        sudo dpkg -i nvim-linux64.deb
+
+    - name: Upload DEB package
+      uses: actions/upload-artifact@v2
+      with:
+        name: nvim-deb-package
+        path: build/nvim-linux64.deb
