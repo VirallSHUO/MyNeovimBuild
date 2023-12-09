@@ -22,7 +22,7 @@ jobs:
 
     - name: Build Neovim
       run: |
-        make CMAKE_BUILD_TYPE=Release
+        make CMAKE_BUILD_TYPE=Release -j$(nproc)
 
     - name: Build DEB package
       run: |
@@ -31,6 +31,7 @@ jobs:
 
     - name: Install DEB package
       run: |
+        cd build
         sudo dpkg -i nvim-linux64.deb
 
     - name: Upload DEB package
